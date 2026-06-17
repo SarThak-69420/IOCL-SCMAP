@@ -1,0 +1,17 @@
+body {
+  margin: 0;
+  font-family: "Inter", "Segoe UI", sans-serif;
+  background: linear-gradient(
+    180deg,
+    #f8fafc 0%,
+    #eef2ff 100%
+  );
+}
+
+* {
+  box-sizing: border-box;
+}
+
+#root {
+  min-height: 100vh;
+}
