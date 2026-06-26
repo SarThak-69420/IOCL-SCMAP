@@ -5,6 +5,8 @@ import api from "../services/api";
 function NewComplaint() {
   const navigate = useNavigate();
 
+  const [selectedFile, setSelectedFile] = useState(null);
+
   const [formData, setFormData] = useState({
     title: "",
     description: "",
@@ -24,15 +26,56 @@ function NewComplaint() {
     e.preventDefault();
 
     try {
-      await api.post("complaints/complaints/", formData);
+      const complaintResponse = await api.post(
+        "complaints/complaints/",
+        formData
+      );
+
+      const complaintId = complaintResponse.data.id;
+
+      if (selectedFile) {
+        const uploadData = new FormData();
+
+        uploadData.append("file", selectedFile);
+
+        await api.post(
+          `complaints/complaints/${complaintId}/upload-attachment/`,
+          uploadData,
+          {
+            headers: {
+              "Content-Type": "multipart/form-data",
+            },
+          }
+        );
+      }
 
       alert("Complaint created successfully");
 
       navigate("/complaints");
     } catch (error) {
-      console.error(error);
-      alert("Failed to create complaint");
-    }
+
+  console.log(error);
+
+  if (error.response) {
+
+    console.log("Status:", error.response.status);
+    console.log("Response:", error.response.data);
+
+    alert(
+      JSON.stringify(
+        error.response.data,
+        null,
+        2
+      )
+    );
+
+  } else {
+
+    alert(error.message);
+
+  }
+
+}
   };
 
   return (
@@ -107,7 +150,7 @@ function NewComplaint() {
               display: "grid",
               gridTemplateColumns: "1fr 1fr",
               gap: "20px",
-              marginBottom: "30px",
+              marginBottom: "20px",
             }}
           >
             <div>
@@ -157,6 +200,34 @@ function NewComplaint() {
                 <option value="CRITICAL">Critical</option>
               </select>
             </div>
+          </div>
+
+          <div style={{ marginBottom: "30px" }}>
+            <label>Upload Evidence</label>
+
+            <input
+              type="file"
+              onChange={(e) =>
+                setSelectedFile(e.target.files[0])
+              }
+              style={{
+                width: "100%",
+                marginTop: "10px",
+                padding: "12px",
+                border: "1px solid #dbe2ea",
+                borderRadius: "12px",
+              }}
+            />
+
+            <p
+              style={{
+                color: "#64748b",
+                fontSize: "13px",
+                marginTop: "8px",
+              }}
+            >
+              Upload screenshots, reports, PDFs or images
+            </p>
           </div>
 
           <button

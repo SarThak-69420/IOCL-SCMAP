@@ -6,30 +6,30 @@ from departments.models import Department
 class Complaint(models.Model):
 
     CATEGORY_CHOICES = [
-        ('SAFETY', 'Safety'),
-        ('MAINTENANCE', 'Maintenance'),
-        ('OPERATIONS', 'Operations'),
-        ('IT', 'IT'),
-        ('HR', 'HR'),
-        ('FINANCE', 'Finance'),
-        ('SECURITY', 'Security'),
-        ('ENVIRONMENT', 'Environment'),
+        ("SAFETY", "Safety"),
+        ("MAINTENANCE", "Maintenance"),
+        ("OPERATIONS", "Operations"),
+        ("IT", "IT"),
+        ("HR", "HR"),
+        ("FINANCE", "Finance"),
+        ("SECURITY", "Security"),
+        ("ENVIRONMENT", "Environment"),
     ]
 
     PRIORITY_CHOICES = [
-        ('LOW', 'Low'),
-        ('MEDIUM', 'Medium'),
-        ('HIGH', 'High'),
-        ('CRITICAL', 'Critical'),
+        ("LOW", "Low"),
+        ("MEDIUM", "Medium"),
+        ("HIGH", "High"),
+        ("CRITICAL", "Critical"),
     ]
 
     STATUS_CHOICES = [
-        ('OPEN', 'Open'),
-        ('ASSIGNED', 'Assigned'),
-        ('IN_PROGRESS', 'In Progress'),
-        ('RESOLVED', 'Resolved'),
-        ('CLOSED', 'Closed'),
-        ('ESCALATED', 'Escalated'),
+        ("OPEN", "Open"),
+        ("ASSIGNED", "Assigned"),
+        ("IN_PROGRESS", "In Progress"),
+        ("RESOLVED", "Resolved"),
+        ("CLOSED", "Closed"),
+        ("ESCALATED", "Escalated"),
     ]
 
     complaint_id = models.CharField(
@@ -47,19 +47,19 @@ class Complaint(models.Model):
     category = models.CharField(
         max_length=30,
         choices=CATEGORY_CHOICES,
-        default='MAINTENANCE'
+        default="MAINTENANCE"
     )
 
     priority = models.CharField(
         max_length=20,
         choices=PRIORITY_CHOICES,
-        default='MEDIUM'
+        default="MEDIUM"
     )
 
     status = models.CharField(
         max_length=20,
         choices=STATUS_CHOICES,
-        default='OPEN'
+        default="OPEN"
     )
 
     department = models.ForeignKey(
@@ -72,7 +72,7 @@ class Complaint(models.Model):
     created_by = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
-        related_name='created_complaints'
+        related_name="created_complaints"
     )
 
     assigned_to = models.ForeignKey(
@@ -80,7 +80,7 @@ class Complaint(models.Model):
         on_delete=models.SET_NULL,
         null=True,
         blank=True,
-        related_name='assigned_complaints'
+        related_name="assigned_complaints"
     )
 
     sla_deadline = models.DateTimeField(
@@ -101,11 +101,11 @@ class Complaint(models.Model):
     )
 
     class Meta:
-        ordering = ['-created_at']
+        ordering = ["-created_at"]
         indexes = [
-            models.Index(fields=['complaint_id']),
-            models.Index(fields=['status']),
-            models.Index(fields=['priority']),
+            models.Index(fields=["complaint_id"]),
+            models.Index(fields=["status"]),
+            models.Index(fields=["priority"]),
         ]
 
     def save(self, *args, **kwargs):
@@ -124,11 +124,11 @@ class ComplaintAttachment(models.Model):
     complaint = models.ForeignKey(
         Complaint,
         on_delete=models.CASCADE,
-        related_name='attachments'
+        related_name="attachments"
     )
 
     file = models.FileField(
-        upload_to='complaints/'
+        upload_to="complaints/"
     )
 
     uploaded_at = models.DateTimeField(
@@ -137,3 +137,30 @@ class ComplaintAttachment(models.Model):
 
     def __str__(self):
         return self.file.name
+
+
+class ComplaintHistory(models.Model):
+
+    complaint = models.ForeignKey(
+        Complaint,
+        on_delete=models.CASCADE,
+        related_name="history"
+    )
+
+    action = models.CharField(
+        max_length=255
+    )
+
+    performed_by = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True
+    )
+
+    created_at = models.DateTimeField(
+        auto_now_add=True
+    )
+
+    def __str__(self):
+        return self.action

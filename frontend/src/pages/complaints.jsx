@@ -39,6 +39,25 @@ function Complaints() {
         return matchesSearch && matchesStatus;
     });
 
+    const getStatusColor = (status) => {
+        switch (status) {
+            case "OPEN":
+                return "#f59e0b";
+            case "ASSIGNED":
+                return "#3b82f6";
+            case "IN_PROGRESS":
+                return "#8b5cf6";
+            case "RESOLVED":
+                return "#10b981";
+            case "ESCALATED":
+                return "#ef4444";
+            case "CLOSED":
+                return "#64748b";
+            default:
+                return "#64748b";
+        }
+    };
+
     return (
         <div style={{ padding: "30px" }}>
             <div
@@ -49,7 +68,15 @@ function Complaints() {
                     marginBottom: "20px",
                 }}
             >
-                <h1>Complaints Management</h1>
+                <h1
+                    style={{
+                        fontSize: "42px",
+                        fontWeight: "700",
+                        color: "#0f172a",
+                    }}
+                >
+                    Complaints Management
+                </h1>
 
                 <button
                     onClick={() => navigate("/new-complaint")}
@@ -98,8 +125,11 @@ function Complaints() {
                 >
                     <option value="ALL">All Status</option>
                     <option value="OPEN">Open</option>
+                    <option value="ASSIGNED">Assigned</option>
+                    <option value="IN_PROGRESS">In Progress</option>
                     <option value="RESOLVED">Resolved</option>
                     <option value="ESCALATED">Escalated</option>
+                    <option value="CLOSED">Closed</option>
                 </select>
             </div>
 
@@ -111,7 +141,6 @@ function Complaints() {
                     boxShadow: "0 2px 8px rgba(0,0,0,0.08)",
                 }}
             >
-
                 <table
                     style={{
                         width: "100%",
@@ -130,6 +159,7 @@ function Complaints() {
                             <th style={{ padding: "14px" }}>Category</th>
                             <th style={{ padding: "14px" }}>Priority</th>
                             <th style={{ padding: "14px" }}>Status</th>
+                            <th style={{ padding: "14px" }}>Assigned To</th>
                             <th style={{ padding: "14px" }}>Actions</th>
                         </tr>
                     </thead>
@@ -180,7 +210,45 @@ function Complaints() {
                                             borderBottom: "1px solid #e5e7eb",
                                         }}
                                     >
-                                        {c.status}
+                                        <span
+                                            style={{
+                                                background: getStatusColor(c.status),
+                                                color: "white",
+                                                padding: "6px 12px",
+                                                borderRadius: "999px",
+                                                fontSize: "12px",
+                                                fontWeight: "600",
+                                            }}
+                                        >
+                                            {c.status}
+                                        </span>
+                                    </td>
+
+                                    <td
+                                        style={{
+                                            padding: "12px",
+                                            borderBottom: "1px solid #e5e7eb",
+                                        }}
+                                    >
+                                        {c.assigned_to_username ? (
+                                            <span
+                                                style={{
+                                                    color: "#0f172a",
+                                                    fontWeight: "600",
+                                                }}
+                                            >
+                                                {c.assigned_to_username}
+                                            </span>
+                                        ) : (
+                                            <span
+                                                style={{
+                                                    color: "#94a3b8",
+                                                    fontStyle: "italic",
+                                                }}
+                                            >
+                                                Unassigned
+                                            </span>
+                                        )}
                                     </td>
 
                                     <td
@@ -259,7 +327,7 @@ function Complaints() {
                         ) : (
                             <tr>
                                 <td
-                                    colSpan="6"
+                                    colSpan="7"
                                     style={{
                                         textAlign: "center",
                                         padding: "30px",
