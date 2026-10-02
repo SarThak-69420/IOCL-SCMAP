@@ -13,7 +13,7 @@ SECRET_KEY = os.getenv("DJANGO_SECRET_KEY", "django-insecure-local-development-k
 
 DEBUG = os.getenv("DEBUG", "True") == "True"
 
-ALLOWED_HOSTS = ["localhost", "127.0.0.1", ".vercel.app"]
+ALLOWED_HOSTS = ["localhost", "127.0.0.1", ".vercel.app", ".onrender.com"]
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
