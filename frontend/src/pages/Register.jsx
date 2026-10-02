@@ -56,9 +56,14 @@ function Register() {
 
       navigate("/login");
     } catch (error) {
-      console.log(error);
-      alert("Registration failed");
-    }
+  console.log("REGISTER ERROR:", error);
+  console.log("REQUEST URL:", error.config?.url);
+  console.log("BASE URL:", error.config?.baseURL);
+  console.log("FULL URL:", error.config?.baseURL + error.config?.url);
+  console.log("RESPONSE:", error.response?.data);
+
+  alert("Registration failed");
+}
   };
 
   return (
