@@ -8,7 +8,7 @@ import {
   useNavigate,
 } from "react-router-dom";
 
-import Profile from "./pages/Profile";
+import Profile from "./pages/profile";
 import Dashboard from "./pages/dashboard";
 import Complaints from "./pages/complaints";
 import ComplaintDetails from "./pages/complaintDetails";
